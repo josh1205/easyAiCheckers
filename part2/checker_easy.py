@@ -26,7 +26,7 @@ class Checker(TwoPlayerGame):
         """
         self.players = players
         self.blank_board = np.zeros((8,8), dtype=object)
-        self.board = self.blank_board.copy
+        self.board = self.blank_board.copy()
         self.black_pieces = [
             (0,1), (0,3), (0,5), (0,7),
             (1,0), (1,2), (1,4), (1,6)
