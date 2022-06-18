@@ -26,6 +26,7 @@ class Checker(TwoPlayerGame):
         """
         self.players = players
         self.blank_board = np.zeros((8,8), dtype=object)
+        self.blank_board[:]= ' '
         self.board = self.blank_board.copy()
         self.black_pieces = [
             (0,1), (0,3), (0,5), (0,7),
@@ -39,7 +40,6 @@ class Checker(TwoPlayerGame):
             self.board[i,j] = "B"
         for i,j in self.white_pieces:
             self.board[i,j] = "W"
-        print(self.board)
         self.white_territory = [(7,0), (7,2), (7,4), (7,6)]
         self.black_territory = [(0,1), (0,3), (0,5), (0,7)]
 
@@ -105,11 +105,11 @@ class Checker(TwoPlayerGame):
         for i,j in old_new_piece_pos:
             print(f"i = {i}")
             b = board.copy()
-            b[i[0], i[1]] = 0 # old position
+            b[i[0], i[1]] = ' ' # old position
             b[j[0], j[1]] = "W" # new position
             print(b)
             table_pos.append(b)
-            assert len(np.where(b != 0)[0]) == 16, f"In possible_moves_on_white_turn(), there are {len(np.where(b != 0)[0])} pieces on the board  \n {b}"
+            assert len(np.where(b != ' ')[0]) == 16, f"In possible_moves_on_white_turn(), there are {len(np.where(b != ' ')[0])} pieces on the board  \n {b}"
 
 
         self.board = board
@@ -117,7 +117,7 @@ class Checker(TwoPlayerGame):
 
     def possible_moves_on_black_turn(self):
         """
-        Iterate's through black's pieces on the board and appends playable moves to an array
+        Iterate's through black's pieces on the board and appends playable moves to an array, then returns playable position
         """
         table_pos = []
         old_new_piece_pos = []
@@ -158,10 +158,10 @@ class Checker(TwoPlayerGame):
 
         for i,j in old_new_piece_pos:
             b = board.copy()
-            b[i[0], i[1]] = 0
+            b[i[0], i[1]] = ' '
             b[j[0], j[1]] = "B"
             table_pos.append(b)
-            assert len(np.where(b != 0)[0]) == 16, f"In possible_moves_on_black_turn(), there are {len(np.where(b != 0)[0])} pieces on the board  \n {b}"
+            assert len(np.where(b != ' ')[0]) == 16, f"In possible_moves_on_black_turn(), there are {len(np.where(b != ' ')[0])} pieces on the board  \n {b}"
 
         self.board = board
         return table_pos
@@ -185,15 +185,14 @@ class Checker(TwoPlayerGame):
         """
         if self.current_player-1 == 0:
             x = np.where(table_pos == "W")
-            #print("white x: ", x)
+            #print("= x: ", x)
         elif self.current_player-1 == 1:
             x = np.where(table_pos == "B")
-            #print("black x: ", x)
+            #print(" x: ", x)
         else:
             raise ValueError("There can be at most 2 players.")
 
-        assert len(np.where(table_pos != 0)[0]) == 16, f"In get_piece_pos_from_table(), there are {len(np.where(table_pos != 0)[0])} pieces on the board  \n {table_pos}"
-        #print([(i,j) for i,j in zip(x[0], x[1])])
+        assert len(np.where(table_pos != ' ')[0]) == 16, f"In get_piece_pos_from_table(), there are {len(np.where(table_pos != ' ')[0])} pieces on the board  \n {table_pos}"
         return [(i,j) for i,j in zip(x[0], x[1])]
 
     def make_move(self, pos): 
